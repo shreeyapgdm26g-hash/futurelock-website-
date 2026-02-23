@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FutureLock | Automate Your Financial Discipline</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: #f4f7fb;
+    color: #333;
+}
+
+header {
+    background: #0f3c78;
+    color: white;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 40px;
+}
+
+header p {
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+button {
+    padding: 12px 20px;
+    background: #2bb673;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background: #23965f;
+}
+
+.section {
+    padding: 50px 20px;
+    text-align: center;
+}
+
+input {
+    padding: 10px;
+    margin: 5px;
+    width: 180px;
+}
+
+.card {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+    max-width: 600px;
+    margin: auto;
+}
+
+.progress-container {
+    background: #ddd;
+    border-radius: 20px;
+    margin-top: 20px;
+}
+
+.progress-bar {
+    background: #2bb673;
+    height: 20px;
+    border-radius: 20px;
+    width: 0%;
+    transition: width 1s;
+}
+
+.warning {
+    color: #c0392b;
+    font-weight: bold;
+}
+
+.footer {
+    background: #0f3c78;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Your biggest financial risk isn’t the market.</h1>
+    <p>It’s inconsistency. Automate your discipline with FutureLock.</p>
+    <button onclick="scrollToPlanner()">Start My Goal Plan</button>
+</header>
+
+<div class="section">
+    <h2>You Know What’s Good For You.</h2>
+    <p>Saving late. Skipping SIPs. Panic selling.</p>
+    <p>The problem isn’t knowledge. It’s behaviour.</p>
+</div>
+
+<div class="section">
+    <h2>Build Your Child Education Goal</h2>
+    <div class="card" id="planner">
+        <p>Target Amount (₹)</p>
+        <input type="number" id="goal" value="5000000">
+
+        <p>Years to Goal</p>
+        <input type="number" id="years" value="15">
+
+        <p>Monthly Investment (₹)</p>
+        <input type="number" id="monthly" value="18000">
+
+        <br><br>
+        <button onclick="calculate()">Calculate Progress</button>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progress"></div>
+        </div>
+
+        <p id="result"></p>
+        <p id="warning" class="warning"></p>
+    </div>
+</div>
+
+<div class="section">
+    <h2>Why FutureLock Works</h2>
+    <p>✔ Automatic Contributions</p>
+    <p>✔ Smart Escalation</p>
+    <p>✔ Behavioural Nudges</p>
+    <p>✔ Exit Friction to Prevent Impulsive Decisions</p>
+</div>
+
+<div class="footer">
+    <p>FutureLock © 2026 | Automate Your Financial Commitment</p>
+</div>
+
+<script>
+function scrollToPlanner() {
+    document.getElementById("planner").scrollIntoView({ behavior: 'smooth' });
+}
+
+function calculate() {
+    let goal = document.getElementById("goal").value;
+    let years = document.getElementById("years").value;
+    let monthly = document.getElementById("monthly").value;
+
+    let annualReturn = 0.10;
+    let totalMonths = years * 12;
+
+    let futureValue = monthly * ((Math.pow(1 + annualReturn/12, totalMonths) - 1) / (annualReturn/12));
+
+    let progressPercent = (futureValue / goal) * 100;
+    if(progressPercent > 100) progressPercent = 100;
+
+    document.getElementById("progress").style.width = progressPercent + "%";
+
+    document.getElementById("result").innerHTML = 
+        "Projected Corpus: ₹" + Math.round(futureValue).toLocaleString();
+
+    if(futureValue < goal) {
+        let gap = goal - futureValue;
+        document.getElementById("warning").innerHTML = 
+        "You may fall short by ₹" + Math.round(gap).toLocaleString() + 
+        ". Consider increasing monthly investment.";
+    } else {
+        document.getElementById("warning").innerHTML = 
+        "You're on track to reach your goal!";
+    }
+}
+</script>
+
+</body>
+</html>
