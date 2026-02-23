@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FutureLock | Behaviourally Smart Advisory</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to right, #0f3c78, #1e5aa8);
+    color: white;
+    text-align: center;
+}
+
+header {
+    padding: 60px 20px;
+}
+
+h1 {
+    font-size: 40px;
+}
+
+.container {
+    background: #ffffff;
+    color: #333;
+    padding: 40px;
+    border-radius: 15px;
+    max-width: 850px;
+    margin: auto;
+    margin-bottom: 40px;
+    box-shadow: 0px 10px 30px rgba(0,0,0,0.25);
+}
+
+input {
+    padding: 10px;
+    margin: 8px;
+    width: 180px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+button {
+    padding: 12px 25px;
+    background: #2bb673;
+    border: none;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #23965f;
+}
+
+.warning {
+    color: #c0392b;
+    font-weight: bold;
+}
+
+.probability {
+    font-size: 22px;
+    margin-top: 20px;
+}
+
+.timeline {
+    height: 10px;
+    background: #ddd;
+    border-radius: 10px;
+    margin-top: 30px;
+    position: relative;
+}
+
+.timeline-progress {
+    height: 10px;
+    background: #2bb673;
+    border-radius: 10px;
+    width: 0%;
+    transition: width 1s ease-in-out;
+}
+
+.footer {
+    padding: 20px;
+    font-size: 14px;
+    opacity: 0.8;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Your biggest financial risk isn't the market.</h1>
+<p>It's inconsistency. FutureLock automates discipline.</p>
+</header>
+
+<div class="container">
+<h2>Child Education Goal Planner</h2>
+
+<p>Target Corpus (₹)</p>
+<input type="number" id="goal" value="5000000">
+
+<p>Years to Goal</p>
+<input type="number" id="years" value="15">
+
+<p>Monthly Investment (₹)</p>
+<input type="number" id="monthly" value="18000">
+
+<br><br>
+<button onclick="calculate()">Update Plan</button>
+
+<canvas id="growthChart" style="margin-top:40px;"></canvas>
+
+<div class="probability" id="probability"></div>
+<p class="warning" id="warning"></p>
+
+<div class="timeline">
+<div class="timeline-progress" id="timeline"></div>
+</div>
+
+</div>
+
+<div class="footer">
+FutureLock © 2026 | Outperform Your Impulses
+</div>
+
+<script>
+
+let chart;
+
+function calculate() {
+
+let goal = parseFloat(document.getElementById("goal").value);
+let years = parseInt(document.getElementById("years").value);
+let monthly = parseFloat(document.getElementById("monthly").value);
+let annualReturn = 0.10;
+
+let idealMonthly = goal / years / 12;
+
+let labels = [];
+let idealData = [];
+let projectedData = [];
+
+let projectedValue = 0;
+
+for (let i = 1; i <= years; i++) {
+    labels.push("Year " + i);
+
+    idealData.push((goal/years) * i);
+
+    projectedValue = monthly * ((Math.pow(1 + annualReturn/12, i*12) - 1) / (annualReturn/12));
+    projectedData.push(projectedValue);
+}
+
+let probability = Math.min((projectedValue / goal) * 100, 100);
+document.getElementById("probability").innerHTML =
+"🎯 Goal Achievement Probability: <strong>" + probability.toFixed(1) + "%</strong>";
+
+if(projectedValue < goal){
+    let gap = goal - projectedValue;
+    document.getElementById("warning").innerHTML =
+    "⚠ You may fall short by ₹" + Math.round(gap).toLocaleString() +
+    ". Increasing SIP slightly today prevents a larger burden later.";
+} else {
+    document.getElementById("warning").innerHTML =
+    "✅ You're on track to fully fund your goal!";
+}
+
+document.getElementById("timeline").style.width = probability + "%";
+
+if(chart){
+    chart.destroy();
+}
+
+chart = new Chart(document.getElementById('growthChart'), {
+    type: 'line',
+    data: {
+        labels: labels,
+        datasets: [
+            {
+                label: 'Ideal Path',
+                data: idealData,
+                borderColor: '#1e5aa8',
+                borderWidth: 3,
+                fill: false
+            },
+            {
+                label: 'Your Projected Growth',
+                data: projectedData,
+                borderColor: '#2bb673',
+                borderWidth: 3,
+                fill: false
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        animation: {
+            duration: 1200
+        },
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+}
+
+calculate();
+
+</script>
+
+</body>
+</html>
